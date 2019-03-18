@@ -1,0 +1,1 @@
+web: gunicorn vermeylen-django.wsgi --log-file -
