@@ -1,1 +1,1 @@
-web: gunicorn vermeylen-django.wsgi --log-file -
+web: gunicorn homevermeylen.wsgi --log-file -
