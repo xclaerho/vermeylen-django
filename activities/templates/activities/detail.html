@@ -1,0 +1,49 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<div class="container my-3">
+  <h1 class="text-primary text-center">{{activity.name}}</h1>
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-2">
+        <div class="card-body">
+          <h4 class="card-title text-center">Beschrijving</h4>
+          <p class="card-text">{{activity.description|linebreaks}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-2">
+        <div class="card-body">
+          <h4 class="card-title text-center">Details</h4>
+          <p>Start: {{activity.start|date:"j F H:i"}}</p>
+          <p>Einde: {{activity.end|date:"j F H:i"}}</p>
+          {% if activity.location %}
+          <p>Locatie: {{activity.location}}</p>
+          {% endif %}
+          {% if activity.price %}
+          <p>Prijs: €{{activity.price}}</p>
+          {% else %}
+          <p>Prijs: gratis</p>
+          {% endif %}
+          <p class="text-center">
+          {% if activity.facebooklink%}
+          <a href="{{activity.facebooklink}}" class="mx-2"><i class="fab fa-facebook-f fa-2x"></i></a>
+          {% endif %}
+          {% if activity.googlecalendarlink%}
+          <a href="{{activity.googlecalendarlink}}" class="mx-2"><i class="far fa-calendar-plus fa-2x"></i></a>
+          {% endif %}
+          </p>
+        </div>
+      </div>
+      {% if activity.image %}
+      <div class="d-flex justify-content-center">
+        <div class="card shadow-sm">
+          <img src="{{activity.image.url}}" class="rounded" style="width:100%">
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,32 @@
+{% extends 'home/base.html' %}
+{% block content %}
+	<div class="container text-center my-3">
+        <h1 class="text-primary">Praesidium 2018-2019</h1>
+        <p class="mb-3">Het huidig praesidium. Zij zorgen voor de dagelijkse werking van de home. Ze zijn ook het eerste aanspreekpunt bij problemen, en ze lossen die op of geven die door aan de homebeheerder. Verder organiseren ze ook activiteiten die de sociale cohesie binnen de home versterken.</p>
+        {% for member in praesidiummembers %}
+        {% if forloop.counter0|divisibleby:2%}
+        {% if forloop.counter0 is not 0 %}
+        </div>
+        {% endif %}
+        <div class="row">
+        {% endif %}
+        <div class="col-md-2">
+            <img src="{{ member.image.url }}" class="rounded-circle img-fluid">
+        </div>
+        <div class="col-md-4">
+            <h3 class="text-left">{{ member.function }}</h3>
+            <h4 class="text-left">{{ member.name }}</h4>
+            <p class="text-left">
+                {% if member.room %}
+                {{ member.room }}<br>
+                {% else %}
+                -<br>
+                {% endif %}
+                {{ member.city }}<br>
+                {{ member.study }}<br>
+                {{ member.email }}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

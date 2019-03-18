@@ -1,0 +1,175 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'muilgraaf/muilgraaf.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'muilgraaf/vis.min.css' %}">
+{% endblock %}
+{% block content %}
+    <!-- Loading screen -->
+	<div id="loadscreen">
+		<div class="loader">
+		</div>
+	</div>
+	
+	<div class="container text-center">
+		<div class="row my-3">
+			<div class="col-md-12"> 
+				<button class="btn btn-primary" id="btnUitbreiden" data-toggle="modal" data-target="#modalUitbreiden">Uitbreiden</button>
+				<button class="btn btn-primary" id="btnInfo" data-toggle="modal" data-target="#modalInfo">Info</button>	
+			</div>
+		</div>	
+	</div>
+
+	<!-- Placeholder for graph -->
+	<div id="schema"></div>
+
+	<div id="modalUitbreiden" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="tab rounded-top">
+					<button id="btnGebeurtenis" class="tablinks active" onclick="openForm(event, 'Gebeurtenis')">Gebeurtenis</button>
+					<button id="btnPersoon" class="tablinks" onclick="openForm(event, 'Persoon')">Persoon</button>
+				</div>
+
+				<div id="Gebeurtenis" class="tabcontent active rounded-bottom" style="display:block">
+					<form method="POST">
+						{% csrf_token %}
+						<fieldset class="form-group">
+							{{ link_form|crispy }}
+						</fieldset>
+						<div class="form-group text-center">
+							<button class="btn btn-outline-primary" type="submit" name="link">Toevoegen</button>
+						</div>
+					</form>
+				</div>
+
+				<div id="Persoon" class="tabcontent rounded-bottom">
+					<form method="POST">
+						{% csrf_token %}
+						<fieldset class="form-group">
+							{{ person_form|crispy }}
+						</fieldset>
+						<div class="form-group text-center">
+							<button class="btn btn-outline-primary" type="submit" name="person">Toevoegen</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="modalInfo" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-body">
+					<h2 id="detailsName">Info</h2>
+					<p>
+						<strong>Legende:</strong><br>
+						<span style="color:#a3f307">Gemuild</span><br>
+						<span style="color:#05f9e2">Sex (+ pijltjes)</span><br>
+						<span style="color:#ff6f00">Relatie</span><br>
+						<br>
+						Bij problemen: contacteer de ICT van Home Vermeylen. Zie de <a href="http://homevermeylen.be">site</a> voor de contactdetails.
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock content %}
+{% block js %}
+    <script src="{% static 'muilgraaf/vis.min.js' %}"></script>
+    <script>
+		// create network off all the data on page load
+		(() => {
+			var nodes = [
+			{% for person in people %}
+				{ "id": {{ person.id }}, "label": "{{person.name}}", "group": {% if person.club is not "Home Vermeylen" %}"rest"{% else %}"Home Vermeylen"{% endif %}}{% if not forloop.last %},{% endif %}
+			{% endfor %}
+			];
+
+			var edges = [
+			{% for link in links %}
+				{"id": {{link.id}}, "from": {{link.pid.id}}, "to": {{link.sid.id}},{% if link.link_type is 2 %}"color": {"color":"#ff6f00", "highlight":"#ff6f00"}{% elif link.link_type is 1 %}"color": {"color":"#05f9e2", "highlight":"#05f9e2"},"arrows":"to;from"{% elif link.link_type is 0 %}"color":{"color":"#a3f307","hightlight":"#a3f307"}{% endif %}}{% if not forloop.last %},{% endif %}
+			{% endfor %}
+			];
+
+			// create a network
+			var container = document.getElementById('schema');
+			var data = {
+				nodes: nodes,
+				edges: edges
+			};
+
+			var options = {
+				"nodes": {
+					"borderWidth": 0,
+					"color": {
+						"highlight": {},
+						"hover": {}
+					},
+					"font": {
+						"color": "white",
+						"face": "Verdana",
+						"background": "black",
+						"size": 20
+					},
+					"shape": "dot",
+					"size": 30
+				},
+				"edges": {
+					"selectionWidth": 4,
+					"smooth": false,
+					"width": 2,
+					"arrows" :{
+						"to": {
+							"scaleFactor": 0.75
+						},
+						"from": {
+							"scaleFactor": 0.75
+						}
+					}
+				},
+				"layout": {
+						"hierarchical": {
+						"enabled": true,
+						"levelSeparation": 150,
+						"nodeSpacing": 200,
+						"treeSpacing": 80,
+						"sortMethod": "directed"
+					}
+				},
+				"physics": {
+					"enabled": false,
+				},
+				"configure": {
+						"enabled": true
+				}
+			}
+			var network = new vis.Network(container, data, options);
+
+			$("#loadscreen").fadeOut();
+		})();
+
+		function openForm(evt, tabName) {
+			// Declare all variables
+			var i, tabcontent, tablinks;
+
+			// Get all elements with class="tabcontent" and hide them
+			tabcontent = document.getElementsByClassName("tabcontent");
+			for (i = 0; i < tabcontent.length; i++) {
+				tabcontent[i].style.display = "none";
+			}
+
+			// Get all elements with class="tablinks" and remove the class "active"
+			tablinks = document.getElementsByClassName("tablinks");
+			for (i = 0; i < tablinks.length; i++) {
+				tablinks[i].className = tablinks[i].className.replace(" active", "");
+			}
+
+			// Show the current tab, and add an "active" class to the button that opened the tab
+			document.getElementById(tabName).style.display = "block";
+			evt.currentTarget.className += " active";
+		}
+	</script>
+{% endblock js %}

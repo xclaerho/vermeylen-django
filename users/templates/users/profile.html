@@ -1,0 +1,25 @@
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container my-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4 class="text-center text-primary">{{ user.first_name }} {{ user.last_name }}</h4>
+                <hr>
+                <!-- Update form -->
+                <div class="container">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <fieldset class="form-group">
+                            <h5 class=" text-primary">Update profiel</h5>
+                            {{ form|crispy }}
+                        </fieldset>
+                        <div class="form-group text-center">
+                            <button class="btn btn-outline-primary" type="submit">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

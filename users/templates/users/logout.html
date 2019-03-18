@@ -1,0 +1,12 @@
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container my-3">
+        <h2 class="text-center text-primary">Succesvol afgemeld.</h2>
+        <div class="text-center">
+            <small class="text-muted">
+                <a href="{% url 'login' %}">Opnieuw inloggen</a>
+            </small>
+        </div>
+    </div>
+{% endblock content %}

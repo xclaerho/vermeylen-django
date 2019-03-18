@@ -1,0 +1,27 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<div class="container my-3 text-center">
+    <h1 class="text-primary">{{object.title}}</h1>
+    
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <div class="my-2">
+        <span>
+            {% if page_obj.has_previous %}
+                <a class="btn btn-outline-primary" href="?page=1">previous</a>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <a class="btn btn-primary" href="?page={{num}}">{{num}}</a>
+                {% else %}
+                <a href="?page={{num}}">{{num}}</a>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

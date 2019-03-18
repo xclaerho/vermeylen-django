@@ -1,0 +1,49 @@
+{% extends 'home/base.html' %}
+{% block content %}
+<div class="container my-3 text-center">
+    <h1 class="text-primary">Foto's</h1>
+    <hr class="primary">
+
+    <!-- List of augustjes -->
+    {% for gallery in object_list %}
+        {% if forloop.first %}
+            <div class="row my-2">
+        {% elif forloop.counter|divisibleby:4 %}
+            </div>
+            <div class="row d-flex justify-content-center">
+        {% endif %}
+        <div class="col-lg-4 col-md-6 my-2">
+            <a href="{% url 'photos:detail' gallery.id %}">
+            <div class="card shadow" style="height:100%">
+                <div class="card-header">
+                    <h3 class="text-primary">{{gallery.title}}</h3>
+                </div>
+                <img class="card-img" src="{{gallery.photos.first.get_thumbnail_url }}" alt="Eerste foto">
+                <div class="card-footer">
+                    <small class="text-muted">{{ gallery.date_added|date:"j F Y" }}</small>
+                </div>
+            </div>
+            </a>
+        </div>
+    {% endfor %}
+    {% if object_list.all %}
+    </div>
+    {% endif %}
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <hr class="text-primary">
+    <div class="my-2">
+        <span>
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <a class="btn btn-primary" href="?page={{num}}">{{num}}</a>
+                {% else %}
+                <a class="mx-2" href="?page={{num}}">{{num}}</a>
+                {% endif %}
+            {% endfor %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

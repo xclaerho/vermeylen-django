@@ -1,0 +1,37 @@
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container py-3 text-center">
+        <h1 class="text-primary">
+            Klachten- & ideeënbox
+        </h1>
+        <p>
+            Drop hier anoniem je klachten/ideeën om het leven op de beste home nóg beter te maken.<br>
+            <small>Voor dringende zaken is het beter om rechtstreeks iemand van het praesidium te contacteren.</small>
+        </p>
+        <!-- Alert on success -->
+        <div class="alert alert-success alert-dismissible fade show text-center" role="alert" id="inputSuccessAlert" style="display:none">
+            Bedankt voor de input!
+            <button type="button" class="close" onclick="$('#inputSuccessAlert').hide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <!-- Alert on error -->
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert" id="inputErrorAlert" style="display:none">
+            Er is iets misgegaan.
+            <button type="button" class="close" onclick="$('#inputErrorAlert').hide()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <!-- Form -->
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group text-center">
+                <button class="btn btn-outline-primary" type="submit"><i class="fas fa-paper-plane"></i> Verzenden</button>
+            </div>
+        </form>
+    </div>
+{% endblock content %}

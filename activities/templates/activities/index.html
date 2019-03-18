@@ -1,0 +1,25 @@
+{% extends 'home/base.html' %}
+
+{% block content %}
+<div class="container my-3">
+  <div class="text-center">
+    <a class="btn btn-outline-primary" href="https://calendar.google.com/calendar/r?cid=vermeylen@hkserv.ugent.be" target="_blank"><i class="fab fa-google"></i> Toevoegen aan Google Calendar</a>
+  </div>
+  <div>
+    <ul class="list-group list-group-flush text-center">
+      {% for activity in activities %}
+      <li class='list-group-item'>
+        <div class='d-flex w-100 justify-content-between'>
+          <h6 class='mb-1'>{{activity.start|date:"j F Y" }}</h6>
+        </div>
+        <a href="{% url 'activities:detail' activity.id %}">
+          <div class="text-center"><strong>{{activity.name}}</strong><br>
+            <p class='mb-1'>Start: {{activity.start|date:"H:i"}}</p>
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock content %}
